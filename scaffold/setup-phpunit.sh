@@ -5,9 +5,9 @@
 
 set -e
 
-DB_NAME="{{DB_NAME}}"
-DB_USER="{{DB_USER}}"
-DB_PASS="{{DB_PASSWORD}}"
+DB_NAME="wordpress"
+DB_USER="wordpress"
+DB_PASS="wordpress"
 DB_HOST="db-phpunit"
 WP_VERSION="${WP_VERSION:-latest}"
 

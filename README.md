@@ -1,127 +1,95 @@
 # wp-phpunit-scaffold
 
-Docker-based PHPUnit test scaffold for WordPress plugin development. When installed via Composer, this package automatically copies a `docker-compose.yml`, `phpunit.xml.dist`, test bootstrap, and helper shell scripts into your plugin project — ready to run against a real WordPress + MySQL environment inside Docker with no manual setup.
+> Docker-based PHPUnit testing scaffold for WordPress plugins. Copy it in, run setup.sh, start testing.
+
+## What this is
+
+A set of files you copy directly into your WordPress plugin project to get PHPUnit running via Docker. No Composer dependency required — just clone (or download) this repo and copy the `scaffold/` contents into your plugin.
+
+The included `setup.sh` helper replaces the placeholder values (`my-plugin`, `wordpress`, etc.) with your actual plugin details so you're ready to run tests in minutes.
 
 ## Requirements
 
-- PHP 7.4+
-- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) (v2)
-- [Composer](https://getcomposer.org/)
+- Docker + Docker Compose
+- A WordPress plugin project
+- PHPUnit in your project's `vendor/` (add it via `composer require --dev phpunit/phpunit`)
 
-## Installation
-
-```bash
-composer require pattonwebz/wp-phpunit-scaffold
-```
-
-The scaffold runs automatically on `post-install-cmd` and `post-update-cmd`. It detects your plugin slug from the project directory name, derives the plugin constant, and writes the following files into your project (skipping any that already exist):
-
-| Generated file | Purpose |
-|---|---|
-| `docker-compose.yml` | MySQL + PHPUnit containers |
-| `scripts/setup-phpunit.sh` | Orchestrate setup + run |
-| `phpunit.xml.dist` | PHPUnit configuration |
-| `.env.example` | DB credential template |
-| `tests/bootstrap.php` | WP test bootstrap |
-| `tests/bin/install-wp-tests.sh` | WP core + test suite downloader |
-| `.github/workflows/phpunit.yml` | GitHub Actions CI workflow |
-
-It also adds four convenience scripts to your `composer.json`.
-
-## Usage
-
-### First-time setup
+## Quick Start
 
 ```bash
-composer run phpunit:setup
-```
+# 1. Clone this repo (or download a zip)
+git clone https://github.com/pattonwebz/wp-phpunit-scaffold.git
 
-This starts the Docker stack, waits for MySQL, downloads the WordPress test suite, and runs PHPUnit.
+# 2. Copy scaffold files into your plugin project root
+cp -r wp-phpunit-scaffold/scaffold/. /path/to/your-plugin/
+cp wp-phpunit-scaffold/setup.sh /path/to/your-plugin/
 
-### Running tests
+# 3. Run setup.sh from your plugin project root (optional but recommended)
+cd /path/to/your-plugin
+bash setup.sh
 
-```bash
-composer run phpunit:run
-```
-
-### Stopping containers
-
-```bash
-composer run phpunit:stop
-```
-
-### Opening a shell in the PHPUnit container
-
-```bash
-composer run phpunit:shell
-```
-
-## Configuration
-
-### Database credentials
-
-The scaffold copies a `.env.example` file into your project root. Copy it to `.env` and adjust as needed:
-
-```bash
+# 4. Copy .env.example → .env and set your actual DB credentials
 cp .env.example .env
+
+# 5. Spin up Docker, install WordPress, and run your tests
+bash setup-phpunit.sh
 ```
 
-```dotenv
-DB_NAME=wordpress
-DB_USER=wordpress
-DB_PASSWORD=wordpress
-```
+## What gets copied in
 
-If no `.env` is present the defaults `wordpress` / `wordpress` / `wordpress` are used.
+| File | Purpose |
+|------|---------|
+| `docker-compose.yml` | Defines a MySQL service and a PHPUnit container based on `pattonwebz/phpunit-wordpress` |
+| `setup-phpunit.sh` | Starts the Docker stack, waits for MySQL, installs the WordPress test suite, then runs PHPUnit |
+| `phpunit.xml.dist` | PHPUnit configuration — test discovery, coverage settings |
+| `.env.example` | Template for database credentials used by Docker Compose |
+| `tests/bootstrap.php` | WordPress test bootstrap — loads the test framework and your plugin |
+| `tests/bin/install-wp-tests.sh` | Downloads WordPress core and the test library via SVN |
+| `.github/workflows/phpunit.yml` | GitHub Actions CI workflow using the native MySQL service (no Docker needed in CI) |
 
-### Docker image tag
+## Manual setup (without setup.sh)
 
-The PHPUnit container image defaults to `pattonwebz/phpunit-wordpress:1.0.0`. Override it at runtime:
+If you prefer to edit files yourself, replace the following placeholder values across the copied files:
 
-```bash
-PHPUNIT_IMAGE_TAG=2.0.0 composer run phpunit:setup
-```
+| Placeholder | Replace with |
+|-------------|-------------|
+| `my-plugin` | Your plugin slug (kebab-case, e.g. `my-awesome-plugin`) |
+| `my-plugin.php` | Your plugin's main PHP file (e.g. `my-awesome-plugin.php`) |
+| `MY_PLUGIN` | Your plugin constant prefix (e.g. `MY_AWESOME_PLUGIN`) |
+| `My Plugin` | Your plugin's human-readable name |
+| `wordpress` (DB credentials) | Your test database name, user, and password |
 
-Or set it permanently in your shell environment / CI pipeline.
+Files that contain placeholders:
+- `docker-compose.yml` — plugin volume path and DB credentials
+- `setup-phpunit.sh` — DB credentials
+- `tests/bootstrap.php` — plugin name, main file, constant
+- `.github/workflows/phpunit.yml` — DB credentials
 
-## Running a specific WordPress version
-
-Pass `WP_VERSION` when running setup:
-
-```bash
-WP_VERSION=6.4 composer run phpunit:setup
-```
-
-The `install-wp-tests.sh` script accepts `latest`, a branch (`6.4`), an exact version (`6.4.2`), or `trunk`.
+Files that need no changes:
+- `phpunit.xml.dist`
+- `tests/bin/install-wp-tests.sh`
+- `.env.example` (edit `.env` instead)
 
 ## GitHub Actions CI
 
-The scaffold copies a ready-to-use workflow to `.github/workflows/phpunit.yml`. It runs PHPUnit against a native MySQL service (no Docker required in CI) across a PHP version matrix.
+The included `.github/workflows/phpunit.yml` runs PHPUnit on push and pull request using GitHub Actions' native MySQL service — no Docker needed in CI. It tests against PHP 7.4, 8.0, 8.1, and 8.2 by default.
 
-```
-PHP 7.4 ✓   PHP 8.0 ✓   PHP 8.1 ✓   PHP 8.2 ✓
-```
+## Docker Image
 
-The workflow:
-- Triggers on pushes and pull requests to `main`/`master`
-- Spins up MySQL 5.7 as a service
-- Installs SVN and the WordPress test suite directly
-- Runs `vendor/bin/phpunit`
+The `phpunit` service uses [`pattonwebz/phpunit-wordpress`](https://hub.docker.com/r/pattonwebz/phpunit-wordpress) (tag `1.0.0`): PHP 8.4 with SVN, Xdebug, and all dependencies needed to run the WordPress test suite. PHPUnit itself comes from your plugin's own `vendor/bin/phpunit`.
 
-No additional configuration is needed — it uses the same DB credentials as your `docker-compose.yml`.
+## Updating
 
-To test against a different PHP version range, edit the `matrix.php-version` array in `.github/workflows/phpunit.yml`.
-
-## Docker image
-
-The `pattonwebz/phpunit-wordpress` image bundles PHP, PHPUnit, Composer, SVN, and the WP CLI toolchain needed to install the WordPress test suite. See the image repository for available tags and PHP version variants.
-
-## Customising generated files
-
-All generated files are standard files in your project — edit them freely after scaffolding. The installer skips any file that already exists, so your modifications are never overwritten on subsequent `composer install` or `composer update` runs.
-
-To re-run the scaffold explicitly:
+To pick up changes from this scaffold in future:
 
 ```bash
-composer run scaffold
+# Pull latest from this repo
+cd wp-phpunit-scaffold && git pull
+
+# Diff the scaffold against your plugin and apply what you want
+diff -rq scaffold/ /path/to/your-plugin/ --exclude='.env' --exclude='vendor'
 ```
+
+## License
+
+GPL-2.0-or-later

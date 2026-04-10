@@ -2,9 +2,9 @@ services:
   db-phpunit:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: {{DB_NAME}}
-      MYSQL_USER: {{DB_USER}}
-      MYSQL_PASSWORD: {{DB_PASSWORD}}
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - db_data:/var/lib/mysql
@@ -15,12 +15,12 @@ services:
       - db-phpunit
     environment:
       WORDPRESS_DB_HOST: db-phpunit:3306
-      WORDPRESS_DB_USER: {{DB_USER}}
-      WORDPRESS_DB_PASSWORD: {{DB_PASSWORD}}
-      WORDPRESS_DB_NAME: {{DB_NAME}}
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
     volumes:
-      - ./:/var/www/html/wp-content/plugins/{{PLUGIN_SLUG}}
-    working_dir: /var/www/html/wp-content/plugins/{{PLUGIN_SLUG}}
+      - ./:/var/www/html/wp-content/plugins/my-plugin
+    working_dir: /var/www/html/wp-content/plugins/my-plugin
     entrypoint: ["/bin/bash"]
     tty: true
 

@@ -15,9 +15,9 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: {{DB_NAME}}
-          MYSQL_USER: {{DB_USER}}
-          MYSQL_PASSWORD: {{DB_PASSWORD}}
+          MYSQL_DATABASE: wordpress
+          MYSQL_USER: wordpress
+          MYSQL_PASSWORD: wordpress
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
@@ -51,7 +51,7 @@ jobs:
         run: sudo apt-get install -y subversion
 
       - name: Install WordPress test suite
-        run: bash tests/bin/install-wp-tests.sh {{DB_NAME}} {{DB_USER}} {{DB_PASSWORD}} 127.0.0.1 latest
+        run: bash tests/bin/install-wp-tests.sh wordpress wordpress wordpress 127.0.0.1 latest
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit --colors=always
