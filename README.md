@@ -44,7 +44,7 @@ bash setup-phpunit.sh
 | `phpunit.xml.dist` | PHPUnit configuration — test discovery, coverage settings |
 | `.env.example` | Template for database credentials used by Docker Compose |
 | `tests/bootstrap.php` | WordPress test bootstrap — loads the test framework and your plugin |
-| `tests/bin/install-wp-tests.sh` | Downloads WordPress core and the test library via SVN |
+| `tests/scripts/install-wp-tests.sh` | Downloads WordPress core and the test library via SVN |
 | `.github/workflows/phpunit.yml` | GitHub Actions CI workflow using the native MySQL service (no Docker needed in CI) |
 
 ## Manual setup (without setup.sh)
@@ -67,7 +67,7 @@ Files that contain placeholders:
 
 Files that need no changes:
 - `phpunit.xml.dist`
-- `tests/bin/install-wp-tests.sh`
+- `tests/scripts/install-wp-tests.sh`
 - `.env.example` (edit `.env` instead)
 
 ## GitHub Actions CI

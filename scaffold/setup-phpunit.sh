@@ -33,7 +33,7 @@ docker compose exec -T db-phpunit mysqladmin drop "$DB_NAME" -f \
   --user="$DB_USER" --password="$DB_PASS" 2>/dev/null || true
 
 echo "=== Installing WordPress test suite ==="
-docker compose exec -T phpunit bash tests/bin/install-wp-tests.sh \
+docker compose exec -T phpunit bash tests/scripts/install-wp-tests.sh \
   "$DB_NAME" "$DB_USER" "$DB_PASS" "$DB_HOST" "$WP_VERSION"
 
 echo "=== Running PHPUnit ==="

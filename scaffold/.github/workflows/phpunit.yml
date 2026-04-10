@@ -51,7 +51,7 @@ jobs:
         run: sudo apt-get install -y subversion
 
       - name: Install WordPress test suite
-        run: bash tests/bin/install-wp-tests.sh wordpress wordpress wordpress 127.0.0.1 latest
+        run: bash tests/scripts/install-wp-tests.sh wordpress wordpress wordpress 127.0.0.1 latest
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit --colors=always

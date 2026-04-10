@@ -183,7 +183,7 @@ process_file() {
             sedi "s/^DB_PASSWORD=wordpress/DB_PASSWORD=${DB_PASSWORD}/" "$file"
             ;;
 
-        phpunit.xml.dist | tests/bin/install-wp-tests.sh)
+        phpunit.xml.dist | tests/scripts/install-wp-tests.sh)
             # No defaults to replace in these files
             ;;
     esac
@@ -196,7 +196,7 @@ SCAFFOLD_FILES=(
     "setup-phpunit.sh"
     "phpunit.xml.dist"
     "tests/bootstrap.php"
-    "tests/bin/install-wp-tests.sh"
+    "tests/scripts/install-wp-tests.sh"
     ".github/workflows/phpunit.yml"
     ".env.example"
 )
@@ -209,7 +209,7 @@ done
 
 echo ""
 header "Setting executable permissions..."
-for script in "setup-phpunit.sh" "tests/bin/install-wp-tests.sh"; do
+for script in "setup-phpunit.sh" "tests/scripts/install-wp-tests.sh"; do
     if [ -f "$script" ]; then
         chmod 755 "$script"
         success "  chmod 755: ${script}"
