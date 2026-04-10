@@ -78,6 +78,32 @@ The included `.github/workflows/phpunit.yml` runs PHPUnit on push and pull reque
 
 The `phpunit` service uses [`pattonwebz/phpunit-wordpress`](https://hub.docker.com/r/pattonwebz/phpunit-wordpress) (tag `1.0.0`): PHP 8.4 with SVN, Xdebug, and all dependencies needed to run the WordPress test suite. PHPUnit itself comes from your plugin's own `vendor/bin/phpunit`.
 
+## Running Tests
+
+Once the Docker stack is up (after running `bash setup-phpunit.sh`), run tests from your plugin root:
+
+```bash
+# Run the full test suite
+composer test
+# or directly:
+vendor/bin/phpunit
+
+# Coverage report in the terminal
+composer test:coverage
+
+# HTML coverage report — output goes to coverage/ directory, open coverage/index.html
+composer test:coverage-html
+
+# Clover XML coverage report (for CI tools like Codecov / Coveralls)
+composer test:coverage-clover
+```
+
+> **Xdebug is bundled** in the `pattonwebz/phpunit-wordpress` Docker image, so coverage commands work out of the box — no extra setup needed.
+
+> **Tip:** Add `coverage/` to your plugin's `.gitignore` to avoid committing HTML reports.
+
+Reference scripts are provided in `scaffold/composer.json.example` (Composer) and `scaffold/package.json.example` (npm). Copy the `scripts` block from `composer.json.example` into your plugin's `composer.json` to enable the `composer test:*` shortcuts.
+
 ## Updating
 
 To pick up changes from this scaffold in future:

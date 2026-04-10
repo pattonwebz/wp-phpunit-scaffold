@@ -1,0 +1,13 @@
+{
+    "_comment": "This is an example package.json for WordPress plugin devs who use npm/Node for build tooling. These scripts proxy directly to Composer, so you still need composer.json with the test scripts defined (see composer.json.example). Useful if you prefer running all project scripts through npm.",
+    "name": "my-plugin",
+    "version": "1.0.0",
+    "description": "WordPress plugin",
+    "scripts": {
+        "test": "composer run test",
+        "test:coverage": "composer run test:coverage",
+        "test:coverage-html": "composer run test:coverage-html && open coverage/index.html",
+        "test:watch": "composer run test:watch"
+    },
+    "devDependencies": {}
+}

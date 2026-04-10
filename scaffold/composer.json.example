@@ -1,0 +1,21 @@
+{
+    "_comment": "This is an example composer.json showing the recommended test scripts for use with wp-phpunit-scaffold. Copy the 'scripts' section into your own plugin's composer.json. The coverage scripts require Xdebug — it is bundled in the pattonwebz/phpunit-wordpress Docker image so coverage works out of the box when running via Docker.",
+    "name": "my-vendor/my-plugin",
+    "description": "My WordPress plugin",
+    "type": "wordpress-plugin",
+    "require-dev": {
+        "phpunit/phpunit": "^9.0 || ^10.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test:watch": "vendor/bin/phpunit --order-by=defects --stop-on-defect",
+        "test:coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
+        "test:coverage-html": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage/",
+        "test:coverage-clover": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover coverage/clover.xml"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

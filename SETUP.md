@@ -34,4 +34,12 @@
 
 ---
 
+## Running tests
+
+```bash
+composer test                    # run the test suite
+composer test:coverage           # coverage report in terminal
+composer test:coverage-html      # HTML report in coverage/ directory
+```
+
 See [README.md](README.md) for full documentation.

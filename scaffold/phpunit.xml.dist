@@ -14,6 +14,7 @@
         </testsuite>
     </testsuites>
 
+    <!-- PHPUnit 10+ coverage configuration -->
     <coverage>
         <include>
             <directory suffix=".php">./</directory>
@@ -21,6 +22,22 @@
         <exclude>
             <directory>./tests/</directory>
             <directory>./vendor/</directory>
+            <directory>./node_modules/</directory>
         </exclude>
     </coverage>
+
+    <!--
+    PHPUnit 9 coverage configuration (use this instead of <coverage> above if you are on PHPUnit 9):
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+                <directory>./node_modules</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    -->
 </phpunit>
