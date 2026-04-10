@@ -216,6 +216,25 @@ for script in "setup-phpunit.sh" "tests/bin/install-wp-tests.sh"; do
     fi
 done
 
+# ── .gitignore ───────────────────────────────────────────────────────────────
+
+echo ""
+header "Checking .gitignore..."
+if grep -qxF '.env' .gitignore 2>/dev/null; then
+    echo -e "${GREEN}✅ .env is already in .gitignore${RESET}"
+else
+    echo -e "${YELLOW}⚠️  IMPORTANT: You should add .env to your .gitignore to prevent committing DB credentials.${RESET}"
+    echo -en "${BOLD}Add .env to .gitignore? (HIGHLY recommended) [Y/n]:${RESET} "
+    read -r GITIGNORE_CONFIRM
+    if [[ -z "$GITIGNORE_CONFIRM" || "$GITIGNORE_CONFIRM" =~ ^[Yy]$ ]]; then
+        [ -f .gitignore ] || touch .gitignore
+        echo '.env' >> .gitignore
+        echo -e "${GREEN}✅ Added .env to .gitignore${RESET}"
+    else
+        echo -e "${YELLOW}⚠️  Skipped. Make sure you never commit your .env file manually.${RESET}"
+    fi
+fi
+
 # ── Done ─────────────────────────────────────────────────────────────────────
 
 echo ""
