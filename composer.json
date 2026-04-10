@@ -1,0 +1,21 @@
+{
+  "name": "pattonwebz/wp-phpunit-scaffold",
+  "description": "Docker-based PHPUnit test scaffold for WordPress plugin development. Provides docker-compose.yml, bootstrap, and setup scripts.",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "keywords": ["wordpress", "phpunit", "testing", "docker", "scaffold", "wp-plugin", "docker-compose"],
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pattonwebz\\WpPhpunitScaffold\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "Pattonwebz\\WpPhpunitScaffold\\Installer::run",
+    "post-update-cmd": "Pattonwebz\\WpPhpunitScaffold\\Installer::run",
+    "scaffold": "Pattonwebz\\WpPhpunitScaffold\\Installer::run"
+  },
+  "minimum-stability": "stable"
+}

@@ -1,0 +1,57 @@
+name: PHPUnit Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: {{DB_NAME}}
+          MYSQL_USER: {{DB_USER}}
+          MYSQL_PASSWORD: {{DB_PASSWORD}}
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [ '7.4', '8.0', '8.1', '8.2' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mysqli
+          tools: composer
+          coverage: xdebug
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install SVN
+        run: sudo apt-get install -y subversion
+
+      - name: Install WordPress test suite
+        run: bash tests/bin/install-wp-tests.sh {{DB_NAME}} {{DB_USER}} {{DB_PASSWORD}} 127.0.0.1 latest
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit --colors=always
